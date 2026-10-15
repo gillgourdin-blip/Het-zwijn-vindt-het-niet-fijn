@@ -10,6 +10,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Zwijn">
 <style>
+*{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+img,canvas,svg{-webkit-user-drag:none}
 html,body{margin:0;height:100%;background:#1b1425;color:#fff;font-family:system-ui,sans-serif;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
 #hud{position:fixed;top:0;left:0;right:0;height:50px;display:flex;justify-content:space-between;align-items:center;padding:env(safe-area-inset-top,0) 18px 0;font-size:20px;box-sizing:border-box}
 canvas{position:fixed;left:50%;transform:translateX(-50%)}
@@ -237,6 +239,7 @@ function fit(){dpr=devicePixelRatio||1;const top=50,aw=innerWidth,ah=innerHeight
   T=Math.floor(Math.min(aw/11,ah/9));VW=Math.min(C,Math.floor(aw/T));VH=Math.min(R,Math.floor(ah/T));
   cv.style.width=VW*T+'px';cv.style.height=VH*T+'px';cv.style.top=top+'px';cv.width=VW*T*dpr;cv.height=VH*T*dpr;}
 addEventListener('resize',fit);fit();
+for(const ev of['contextmenu','selectstart','dragstart','gesturestart'])document.addEventListener(ev,e=>e.preventDefault(),{passive:false});
 let ac;function beep(f,d=.1){try{ac=ac||new AudioContext();const o=ac.createOscillator(),v=ac.createGain();o.frequency.value=f;o.type='square';v.gain.value=.05;o.connect(v);v.connect(ac.destination);o.start();o.stop(ac.currentTime+d);}catch(e){}}
 const buzz=n=>{try{navigator.vibrate&&navigator.vibrate(n)}catch(e){}};
 const boar=(x,y,c,k)=>({x,y,c,k,f:1});
@@ -302,6 +305,7 @@ function dpadMove(e){const r=dp.getBoundingClientRect(),dx=e.clientX-(r.left+r.w
   const ax=Math.abs(dx),ay=Math.abs(dy);
   const horiz=dir.x!==0?!(ay>ax*1.25):dir.y!==0?(ax>ay*1.25):ax>ay;
   setDir(horiz?Math.sign(dx):0,horiz?0:Math.sign(dy));}
+dp.addEventListener('touchstart',e=>e.preventDefault(),{passive:false});
 dp.addEventListener('pointerdown',e=>{e.preventDefault();sid=e.pointerId;try{dp.setPointerCapture(sid);}catch(_){}dpadMove(e);});
 dp.addEventListener('pointermove',e=>{if(e.pointerId===sid)dpadMove(e);});
 const up=()=>{sid=null;lastD=null;setDir(0,0);};
